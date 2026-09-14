@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Skill Exchange</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>🤝 SkillSwap</h1>
+    <p>Exchange skills, not money.</p>
+</header>
+
+<main>
+
+    <section class="hero">
+        <h2>Learn. Teach. Connect.</h2>
+        <p>
+            Find people who can teach you something while you
+            share your own skills with them.
+        </p>
+    </section>
+
+    <section class="card">
+        <h2>Add Your Profile</h2>
+
+        <input id="name" type="text" placeholder="Your name">
+        <input id="teach" type="text" placeholder="Skill you can teach">
+        <input id="learn" type="text" placeholder="Skill you want to learn">
+
+        <button onclick="addProfile()">Add Profile</button>
+    </section>
+
+    <section class="card">
+        <h2>🔎 Find a Skill Partner</h2>
+
+        <input
+            id="search"
+            type="text"
+            placeholder="Search for a skill..."
+            oninput="searchSkills()"
+        >
+
+        <div id="results"></div>
+    </section>
+
+    <section class="card">
+        <h2>👥 Community</h2>
+        <div id="profiles"></div>
+    </section>
+
+</main>
+
+<footer>
+    <p>Local Skill Exchange | Built with HTML, CSS & JavaScript</p>
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
