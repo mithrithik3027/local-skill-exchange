@@ -1,20 +1,18 @@
-let profiles = JSON.parse(
-    localStorage.getItem("profiles")
-) || [];
+let profiles = JSON.parse(localStorage.getItem("profiles")) || [];
 
-
+// Add a new profile
 function addProfile() {
-
     const name = document.getElementById("name").value.trim();
     const teach = document.getElementById("teach").value.trim();
     const learn = document.getElementById("learn").value.trim();
 
-    if (name === "" || teach === "" || learn === "") {
-        alert("Please fill all fields!");
+    if (!name || !teach || !learn) {
+        alert("Please fill in all fields.");
         return;
     }
 
     const profile = {
+        id: Date.now(),
         name: name,
         teach: teach,
         learn: learn
@@ -22,108 +20,104 @@ function addProfile() {
 
     profiles.push(profile);
 
-    localStorage.setItem(
-        "profiles",
-        JSON.stringify(profiles)
-    );
+    localStorage.setItem("profiles", JSON.stringify(profiles));
 
     document.getElementById("name").value = "";
     document.getElementById("teach").value = "";
     document.getElementById("learn").value = "";
 
-    displayProfiles();
+    displayProfiles(profiles);
 }
 
-
-function displayProfiles() {
-
+// Display community members
+function displayProfiles(list) {
     const container = document.getElementById("profiles");
 
     container.innerHTML = "";
 
-    if (profiles.length === 0) {
-        container.innerHTML =
-            "<p>No profiles yet. Be the first!</p>";
+    if (list.length === 0) {
+        container.innerHTML = `
+            <p>No community members yet. Be the first to join!</p>
+        `;
         return;
     }
 
-    profiles.forEach(profile => {
+    list.forEach(profile => {
+        const card = document.createElement("div");
+        card.className = "profile";
 
-        const div = document.createElement("div");
+        const name = document.createElement("h4");
+        name.textContent = profile.name;
 
-        div.className = "profile";
+        const teach = document.createElement("p");
+        teach.textContent = `🎓 Teaches: ${profile.teach}`;
 
-        div.innerHTML = `
-            <h3>👤 ${escapeHTML(profile.name)}</h3>
+        const learn = document.createElement("p");
+        learn.textContent = `📚 Wants to learn: ${profile.learn}`;
 
-            <span class="skill">
-                Teaches: ${escapeHTML(profile.teach)}
-            </span>
+        card.appendChild(name);
+        card.appendChild(teach);
+        card.appendChild(learn);
 
-            <span class="skill">
-                Wants to learn: ${escapeHTML(profile.learn)}
-            </span>
-        `;
-
-        container.appendChild(div);
+        container.appendChild(card);
     });
 }
 
-
+// Search for skills
 function searchSkills() {
-
-    const search =
-        document.getElementById("search")
+    const search = document
+        .getElementById("search")
         .value
         .toLowerCase()
         .trim();
 
-    const results =
-        document.getElementById("results");
-
-    results.innerHTML = "";
-
-    if (search === "") {
+    if (!search) {
+        displayProfiles(profiles);
+        document.getElementById("results").innerHTML = "";
         return;
     }
 
     const matches = profiles.filter(profile =>
-        profile.teach.toLowerCase().includes(search)
+        profile.teach.toLowerCase().includes(search) ||
+        profile.learn.toLowerCase().includes(search)
     );
 
+    displaySearchResults(matches);
+}
+
+// Display search results
+function displaySearchResults(matches) {
+    const results = document.getElementById("results");
+
+    results.innerHTML = "";
+
     if (matches.length === 0) {
-
-        results.innerHTML =
-            "<p>No one found for this skill.</p>";
-
+        results.innerHTML = `
+            <p>No matching skill found.</p>
+        `;
         return;
     }
 
     matches.forEach(profile => {
+        const card = document.createElement("div");
+        card.className = "profile";
 
-        const div = document.createElement("div");
+        const name = document.createElement("h4");
+        name.textContent = `🤝 ${profile.name}`;
 
-        div.className = "match";
+        const teach = document.createElement("p");
+        teach.textContent = `Can teach: ${profile.teach}`;
 
-        div.innerHTML = `
-            👤 <strong>${escapeHTML(profile.name)}</strong>
-            can teach
-            <strong>${escapeHTML(profile.teach)}</strong>
-        `;
+        const learn = document.createElement("p");
+        learn.textContent = `Wants to learn: ${profile.learn}`;
 
-        results.appendChild(div);
+        card.appendChild(name);
+        card.appendChild(teach);
+        card.appendChild(learn);
+
+        results.appendChild(card);
     });
 }
 
-
-function escapeHTML(text) {
-
-    const div = document.createElement("div");
-
-    div.textContent = text;
-
-    return div.innerHTML;
-}
-
-
-displayProfiles();
+// Load profiles when page opens
+displayProfiles(profiles);
